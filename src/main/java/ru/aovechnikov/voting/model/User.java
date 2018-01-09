@@ -1,5 +1,7 @@
 package ru.aovechnikov.voting.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.*;
 
 /**
@@ -7,16 +9,34 @@ import java.util.*;
  * @author - A.Ovechnikov
  * @date - 09.01.2018
  */
+
+@Entity
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
 public class User extends AbstractNamedEntity {
 
+    @Column(name = "email", nullable = false, unique = true)
+    @NotBlank
+    @Email
     private String email;
 
+    @Column(name = "password", nullable = false)
+    @NotBlank
+    @Size(min = 6)
     private String password;
 
+    @Column(name = "registered", columnDefinition = "timestamp default now()", nullable = false)
+    @NotNull
     private Date registered = new Date();
 
+    @Column(name = "enabled", columnDefinition = "bool default true", nullable = false)
     private boolean enabled = true;
 
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_id_role_idx")})
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "role")
+    @NotEmpty
     private Set<Role> roles;
 
     public User() {
