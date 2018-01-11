@@ -2,12 +2,13 @@ package ru.aovechnikov.voting.model;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
- * Simple entity representing an dish.
+ * Simple domain entity representing an dish.
  * @author - A.Ovechnikov
  * @date - 09.01.2018
  */
@@ -18,7 +19,8 @@ public class Dish extends AbstractNamedEntity {
 
     @Column(name = "price", nullable = false)
     @NotNull
-    private Integer price;
+    @Range(min = 0, max = (Integer.MAX_VALUE/100 -1))
+    private Double price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false, updatable = false)
@@ -28,17 +30,17 @@ public class Dish extends AbstractNamedEntity {
     public Dish() {
     }
 
-    public Dish(Integer id, String name, Integer price, Menu menu) {
+    public Dish(Integer id, String name, Double price, Menu menu) {
         super(id, name);
         this.price = price;
         this.menu = menu;
     }
 
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
