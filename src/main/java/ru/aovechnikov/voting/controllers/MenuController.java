@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.aovechnikov.voting.model.Dish;
 import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.model.Restaurant;
 import ru.aovechnikov.voting.service.DishService;
@@ -13,7 +14,6 @@ import ru.aovechnikov.voting.service.MenuService;
 import ru.aovechnikov.voting.service.RestaurantService;
 import ru.aovechnikov.voting.to.DishTo;
 
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -67,8 +67,8 @@ public class MenuController {
     }
 
     @PostMapping(value = "/{id}/dishes", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DishTo> createDishForMenu(@RequestBody DishTo dishTo, @PathVariable("id") int menuId) {
-        dishService.create(dishTo, menuId);
+    public ResponseEntity<DishTo> createDishForMenu(@RequestBody Dish dish, @PathVariable("id") int menuId) {
+        dishService.create(dish, menuId);
         return null;
     }
 

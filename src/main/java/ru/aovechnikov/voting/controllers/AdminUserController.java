@@ -30,13 +30,13 @@ public class AdminUserController {
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> update(@PathVariable("id") int id, @RequestBody User user) {
-        userService.update(user);
+        userService.save(user);
         return null;
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> create(@RequestBody User user) {
-        userService.create(user);
+        userService.save(user);
         return null;
     }
 

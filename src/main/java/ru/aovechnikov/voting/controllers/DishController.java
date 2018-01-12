@@ -10,7 +10,6 @@ import ru.aovechnikov.voting.model.Dish;
 import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.service.DishService;
 import ru.aovechnikov.voting.service.MenuService;
-import ru.aovechnikov.voting.to.DishTo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,8 +39,8 @@ public class DishController {
     }
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> update(@RequestBody DishTo dishTo, @PathVariable("id") int id){
-        dishService.update(dishTo);
+    public ResponseEntity<Dish> update(@RequestBody Dish dish, @PathVariable("id") int id){
+        dishService.update(dish);
         return null;
     }
 

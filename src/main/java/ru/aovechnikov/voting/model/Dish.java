@@ -3,6 +3,7 @@ package ru.aovechnikov.voting.model;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
+import ru.aovechnikov.voting.repository.converter.PriceConverter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,7 @@ public class Dish extends AbstractNamedEntity {
     @Column(name = "price", nullable = false)
     @NotNull
     @Range(min = 0, max = (Integer.MAX_VALUE/100 -1))
+    @Convert(converter = PriceConverter.class)
     private Double price;
 
     @ManyToOne(fetch = FetchType.LAZY)
