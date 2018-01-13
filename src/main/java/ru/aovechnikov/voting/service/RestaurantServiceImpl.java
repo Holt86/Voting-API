@@ -3,6 +3,7 @@ package ru.aovechnikov.voting.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.aovechnikov.voting.model.Restaurant;
@@ -36,6 +37,7 @@ public class RestaurantServiceImpl implements RestaurantService{
     /**
      * {@inheritDoc}
      */
+    @Secured("ROLE_ADMIN")
     @Override
     public void delete(int id) {
         checkNotFound(repository.delete(id) != 0, id);
@@ -44,6 +46,7 @@ public class RestaurantServiceImpl implements RestaurantService{
     /**
      * {@inheritDoc}
      */
+    @Secured("ROLE_ADMIN")
     @Override
     public Restaurant save(Restaurant restaurant) {
         Assert.notNull(restaurant, "restaurant must be not null");

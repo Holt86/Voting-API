@@ -3,9 +3,13 @@ package ru.aovechnikov.voting.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import ru.aovechnikov.voting.AuthorizedUser;
 import ru.aovechnikov.voting.model.User;
 import ru.aovechnikov.voting.repository.UserRepository;
 import ru.aovechnikov.voting.to.UserTo;
@@ -24,7 +28,7 @@ import static ru.aovechnikov.voting.util.ValidationUtil.checkNotFoundWithId;
  */
 
 @Service("userService")
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository repository;
@@ -72,5 +76,19 @@ public class UserServiceImpl implements UserService{
     @Override
     public Page<User> findAll(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    /**
+     * @see UserDetailsService#loadUserByUsername(String)
+     *
+     * @param email identifying the user whose data is required
+     * @return {@link AuthorizedUser} a fully populated user record
+     */
+    @Override
+    public UserDetails loadUserByUsername(String email) {
+        Assert.notNull(email, "email must be not null");
+        User user = repository.findByEmail(email.toLowerCase()).orElseThrow(() ->
+                new UsernameNotFoundException(String.format("User with %s not found", email)));
+        return new AuthorizedUser(user);
     }
 }

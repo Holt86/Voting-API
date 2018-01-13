@@ -2,6 +2,7 @@ package ru.aovechnikov.voting.service;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.util.exception.NotFoundException;
 
@@ -86,5 +87,25 @@ public class MenuServiceImplTest extends AbstractServiceTest {
     @Test
     public void testFindMenuByDish() throws Exception {
         MATCHER_FOR_MENU.assertEquals(MENU_1, service.findMenuByDish(DISH_1_ID_MENU_1));
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testDeleteAccessDenied() throws Exception {
+        configureAuthentication("ROLE_USER");
+        service.delete(MENU_1_ID);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testCreateAccessDenied() throws Exception {
+        configureAuthentication("ROLE_USER");
+        Menu created = getCreatedMenu();
+        service.create(created, CAROLS_ID);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testUpdateAccessDenied() throws Exception {
+        configureAuthentication("ROLE_USER");
+        Menu updated = getUpdatedMenu();
+        service.update(updated);
     }
 }

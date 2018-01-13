@@ -6,9 +6,9 @@ DELETE FROM restaurant;
 ALTER SEQUENCE global_seq RESTART WITH 100;
 
 INSERT INTO users (name, email, password) VALUES
-  ('User1', 'user1@yandex.ru', 'password1'),
-  ('User2', 'user2@yandex.ru', 'password2'),
-  ('Admin', 'admin@mail.ru', 'admin');
+  ('User1', 'user1@yandex.ru', '$2a$10$kpr5QRyU2aj/eCjqweVxreGScNqM82vUvRCORLjAZopo.Kxp5B2S2'),
+  ('User2', 'user2@yandex.ru', '$2a$10$OS.c29wTqAmFWM7fsMe6SuV/1gMmXHQq0oXFi/l9ofs.5Z0Dw5tmS'),
+  ('Admin', 'admin@mail.ru', '$2a$10$GDeQFdS0EmOUJtskC4PMp.84FOLWrRiTx3KB32u0t909ZVXc6aOAi');
 
 INSERT INTO restaurant (name) VALUES
   ('mama roma'),

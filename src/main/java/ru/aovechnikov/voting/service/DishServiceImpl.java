@@ -3,6 +3,7 @@ package ru.aovechnikov.voting.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -44,6 +45,7 @@ public class DishServiceImpl implements DishService {
     /**
      * {@inheritDoc}
      */
+    @Secured("ROLE_ADMIN")
     @Override
     public void delete(int id){
         checkNotFound(dishRepository.delete(id) != 0, id);
@@ -52,6 +54,7 @@ public class DishServiceImpl implements DishService {
     /**
      * {@inheritDoc}
      */
+    @Secured("ROLE_ADMIN")
     @Override
     public Dish create(Dish dish, int menuId) {
         Assert.notNull(dish, "dish must be not null");
@@ -62,6 +65,7 @@ public class DishServiceImpl implements DishService {
     /**
      * {@inheritDoc}
      */
+    @Secured("ROLE_ADMIN")
     @Transactional
     @Override
     public Dish update(Dish dish) {

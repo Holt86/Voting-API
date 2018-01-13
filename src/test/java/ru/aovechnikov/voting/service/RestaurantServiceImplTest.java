@@ -2,6 +2,7 @@ package ru.aovechnikov.voting.service;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import ru.aovechnikov.voting.model.Restaurant;
 import ru.aovechnikov.voting.util.exception.NotFoundException;
 
@@ -72,5 +73,18 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     @Test
     public void validationException() throws Exception{
         validateRootCause(() -> service.save(new Restaurant(null, "")), ConstraintViolationException.class);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testDeleteAccessDenied() throws Exception {
+        configureAuthentication("ROLE_USER");
+        service.delete(MAMA_ROMA_ID);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testUpdateAccessDenied() throws Exception {
+        configureAuthentication("ROLE_USER");
+        Restaurant updated = getUpdatedRestaurant();
+        service.save(updated);
     }
 }

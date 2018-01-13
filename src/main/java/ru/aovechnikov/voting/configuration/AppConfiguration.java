@@ -3,6 +3,7 @@ package ru.aovechnikov.voting.configuration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * Created rootContext {@link ApplicationContext}  that is
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(basePackages = {"ru.aovechnikov.voting.service"})
+@Import(SecurityConfig.class)
 public class AppConfiguration {
 
 }
