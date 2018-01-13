@@ -1,9 +1,11 @@
 package ru.aovechnikov.voting.model;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -14,6 +16,7 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name = "menu", uniqueConstraints = @UniqueConstraint(columnNames = {"date", "restaurant_id"}, name = "date_name_restaurant_idx"))
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Menu extends AbstractBaseEntity {
 
     @Column(name = "date", nullable = false, columnDefinition = "date default now()")

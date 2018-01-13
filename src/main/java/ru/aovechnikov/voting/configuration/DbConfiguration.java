@@ -18,12 +18,13 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import ru.aovechnikov.voting.repository.JpaUtil;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.Properties;
 
-import static org.hibernate.cfg.AvailableSettings.FORMAT_SQL;
-import static org.hibernate.cfg.AvailableSettings.USE_SQL_COMMENTS;
+import static org.hibernate.cache.ehcache.EhCacheRegionFactory.NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME;
+import static org.hibernate.cfg.AvailableSettings.*;
 
 /**
  * Created rootContext {@link ApplicationContext}  that is
@@ -71,6 +72,10 @@ public class DbConfiguration {
         Properties properties = new Properties();
         properties.setProperty(FORMAT_SQL, env.getProperty("hibernate.format_sql"));
         properties.setProperty(USE_SQL_COMMENTS, "hibernate.use_sql_comments");
+        properties.setProperty(CACHE_REGION_FACTORY, "org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory");
+        properties.setProperty(USE_SECOND_LEVEL_CACHE, "true");
+        properties.setProperty(USE_QUERY_CACHE, "true");
+        properties.setProperty(NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME, "cache/ehcache.xml");
         emf.setJpaProperties(properties);
         return emf;
     }
@@ -102,5 +107,10 @@ public class DbConfiguration {
         populator.setSqlScriptEncoding("UTF-8");
         initializer.setDatabasePopulator(populator);
         return initializer;
+    }
+
+    @Bean
+    public JpaUtil jpaUtil(){
+        return new JpaUtil();
     }
 }

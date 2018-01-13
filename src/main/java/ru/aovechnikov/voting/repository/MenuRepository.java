@@ -5,12 +5,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aovechnikov.voting.model.Dish;
 import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.model.Restaurant;
 
+import javax.persistence.QueryHint;
 import java.time.LocalDate;
 
 /**
@@ -35,6 +37,7 @@ public interface MenuRepository extends JpaRepository<Menu, Integer>{
 
     /**
      * Retrieve {@link Page} of {@link Menu} from the data store by id of {@link Restaurant}.
+     * Hibernate caches query level.
      *
      * @param restaurantId Value to search for
      * @param pageable pagination information
@@ -42,16 +45,19 @@ public interface MenuRepository extends JpaRepository<Menu, Integer>{
      * with the specified id.
      */
     @Query("SELECT m FROM Menu m JOIN m.restaurant WHERE m.restaurant.id=:restaurantId")
+    @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
     Page<Menu> findByRestaurantId(@Param("restaurantId") int restaurantId, Pageable pageable);
 
     /**
      * Retrieve {@link Page} of {@link Menu} from the data store by {@link LocalDate}.
+     * Hibernate caches query level.
      *
      * @param date Value to search for
      * @param pageable pagination information
      * @return {@link Page} of all {@link Menu} which have the specified date.
      */
     @Query("SELECT m FROM Menu m JOIN m.restaurant WHERE m.date=:date")
+    @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
     Page<Menu> findByDate(@Param("date") LocalDate date, Pageable pageable);
 
     /**

@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.aovechnikov.voting.configuration.AppConfiguration;
 import ru.aovechnikov.voting.configuration.DbConfiguration;
+import ru.aovechnikov.voting.repository.JpaUtil;
 import ru.aovechnikov.voting.util.ValidationUtil;
 
 import java.util.Collection;
@@ -38,6 +40,9 @@ abstract public class AbstractServiceTest {
 
     public static Pageable pageable = PageRequest.of(0, 20, Sort.by("id"));
 
+    @Autowired
+    protected JpaUtil jpaUtil;
+
     static {
         SLF4JBridgeHandler.install();
     }
@@ -45,6 +50,7 @@ abstract public class AbstractServiceTest {
     @Before
     public void setUp() throws Exception{
         configureAuthentication("ROLE_ADMIN");
+        jpaUtil.clear2ndLevelHibernateCache();
     }
 
     public static void configureAuthentication(String role) {

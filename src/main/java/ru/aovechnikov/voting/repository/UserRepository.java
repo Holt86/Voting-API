@@ -5,10 +5,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aovechnikov.voting.model.User;
 
+import javax.persistence.QueryHint;
 import java.util.Optional;
 
 /**
@@ -32,12 +34,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     int delete(@Param("id") int id);
     /**
      * Retrieves an {@link User} by its email.
+     * Hibernate caches query level.
      *
      * @param email must not be {@literal null}.
      * @return {@link User} with the given email or {@literal Optional#empty()} if none found
      * @throws IllegalArgumentException if {@code email} is {@literal null}.
      */
     @Query("SELECT u FROM User u WHERE u.email=:email")
+    @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
     Optional<User> findByEmail(@Param("email") String email);
 
     /**
