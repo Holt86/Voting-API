@@ -2,7 +2,7 @@ package ru.aovechnikov.voting.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.aovechnikov.voting.controllers.MenuController;
+import ru.aovechnikov.voting.web.controllers.MenuController;
 import ru.aovechnikov.voting.model.Dish;
 import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.model.Restaurant;
