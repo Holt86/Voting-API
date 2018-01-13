@@ -5,7 +5,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class UserTo extends BaseTo {
+public class UserTo extends HasIdTo {
 
     @NotBlank
     private String name;

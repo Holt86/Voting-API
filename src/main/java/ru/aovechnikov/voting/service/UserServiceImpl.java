@@ -30,19 +30,19 @@ public class UserServiceImpl implements UserService{
     private UserRepository repository;
 
     @Override
-    public User findById(int id) throws NotFoundException {
+    public User findById(int id) {
         return repository.findById(id).orElseThrow(() ->
                 new NotFoundException("id=" + id));
     }
 
     @Override
-    public void delete(int id) throws NotFoundException {
+    public void delete(int id) {
         checkNotFound(repository.delete(id) != 0, id);
     }
 
     @Transactional
     @Override
-    public void update(UserTo userTo) throws NotFoundException {
+    public void update(UserTo userTo) {
         Assert.notNull(userTo, "user must be not null");
         User user = updateFromTo(findById(userTo.getId()), userTo);
         checkNotFoundWithId(repository.save(prepareToSave(user)), user.getId());
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findByEmail(String email) throws NotFoundException {
+    public User findByEmail(String email) {
         Assert.notNull(email, "email must be not null");
         return repository.findByEmail(email).orElseThrow(() ->
                 new NotFoundException(String.format("email=", email)));

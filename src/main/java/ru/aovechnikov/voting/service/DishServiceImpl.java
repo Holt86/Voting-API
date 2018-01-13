@@ -36,7 +36,7 @@ public class DishServiceImpl implements DishService {
      * {@inheritDoc}
      */
     @Override
-    public Dish findById(int id) throws NotFoundException {
+    public Dish findById(int id){
         return dishRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("id=" + id));
     }
@@ -45,7 +45,7 @@ public class DishServiceImpl implements DishService {
      * {@inheritDoc}
      */
     @Override
-    public void delete(int id) throws NotFoundException {
+    public void delete(int id){
         checkNotFound(dishRepository.delete(id) != 0, id);
     }
 
@@ -83,6 +83,7 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     public Page<Dish> findByDate(LocalDate date, Pageable pageable) {
-        return dishRepository.findByDate(getCurrentDateIfNull(date), pageable);
+        Assert.notNull(date, "date must be not null");
+        return dishRepository.findByDate(date, pageable);
     }
 }

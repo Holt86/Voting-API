@@ -42,6 +42,7 @@ public interface RestaurantService {
 
     /**
      * Retrieve {@link Page} of {@link Restaurant} from the data store by part name.
+     * If name is null throw {@link IllegalArgumentException}.
      *
      * @param name Value to search for
      * @param pageable pagination information

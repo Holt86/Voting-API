@@ -26,7 +26,7 @@ public interface UserService {
      * @return {@link User} with the given id.
      * @throws NotFoundException if none found.
      */
-    User findById(int id) throws NotFoundException;
+    User findById(int id);
 
     /**
      * Delete an {@link User} to the data store by id.
@@ -34,7 +34,7 @@ public interface UserService {
      * @param id the id to delete for
      * @throws NotFoundException if the number of deleted row is 0.
      */
-    void delete(int id) throws NotFoundException;
+    void delete(int id);
 
     /**
      * {@link UserTo} is converted into {@link User} invoked {@link UserUtil#updateFromTo(User, UserTo)}
@@ -44,7 +44,7 @@ public interface UserService {
      * @throws NotFoundException if an {@link User} with {@link UserTo#getId()} none exists in the data store.
      * @throws IllegalArgumentException in case the {@link UserTo} is {@literal null}
      */
-    void update(UserTo userTo) throws NotFoundException;
+    void update(UserTo userTo);
 
     /**
      * Saves {@link User}.
@@ -60,10 +60,10 @@ public interface UserService {
      *
      * @param email Value to search for.
      * @return {@link User} with the given id.
-     * @throws NotFoundException        if none found.
+     * @throws NotFoundException if none found.
      * @throws IllegalArgumentException in case the email is {@literal null}
      */
-    User findByEmail(String email) throws NotFoundException;
+    User findByEmail(String email);
 
 
     /**

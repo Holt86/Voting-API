@@ -26,7 +26,7 @@ public interface MenuService {
      * @return {@link Menu} with the given id.
      * @throws NotFoundException if none found.
      */
-    Menu findById(int id) throws NotFoundException;
+    Menu findById(int id);
 
     /**
      * Delete an {@link Menu} to the data store by id.
@@ -34,7 +34,7 @@ public interface MenuService {
      * @param id the id to delete for
      * @throws NotFoundException if the number of deleted row is 0.
      */
-    void delete(int id) throws NotFoundException;
+    void delete(int id);
 
     /**
      * Assigns reference on {@link Menu#restaurant} with the given identifier
@@ -71,7 +71,7 @@ public interface MenuService {
 
     /**
      * Retrieve {@link Page} of {@link Menu} from the data store by {@link LocalDate}.
-     * If the {@link LocalDate} is {@literal null} then the current date is used.
+     * If the {@link LocalDate} is {@literal null} throw {@link IllegalArgumentException}.
      *
      * @param date Value to search for
      * @param pageable pagination information

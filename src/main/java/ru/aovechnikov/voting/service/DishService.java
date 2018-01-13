@@ -25,7 +25,7 @@ public interface DishService {
      * @return {@link Dish} with the given id.
      * @throws NotFoundException if none found.
      */
-    Dish findById(int id) throws NotFoundException;
+    Dish findById(int id);
 
     /**
      * Delete an {@link Dish} to the data store by id.
@@ -33,7 +33,7 @@ public interface DishService {
      * @param id the id to delete for
      * @throws NotFoundException if the number of deleted row is 0.
      */
-    void delete(int id) throws NotFoundException;
+    void delete(int id);
 
     /**
      * Assigns reference on {@link Dish#menu} with the given identifier
@@ -70,7 +70,7 @@ public interface DishService {
 
     /**
      * Retrieve {@link Page} of {@link Dish} from the data store by {@link LocalDate}.
-     * If the {@link LocalDate} is {@literal null} then the current date is used.
+     * If the {@link LocalDate} is {@literal null} throw {@link IllegalArgumentException}.
      *
      * @param date Value to search for
      * @param pageable pagination information

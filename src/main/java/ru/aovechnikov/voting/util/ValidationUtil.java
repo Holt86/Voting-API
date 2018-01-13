@@ -2,6 +2,14 @@ package ru.aovechnikov.voting.util;
 
 import ru.aovechnikov.voting.HasId;
 import ru.aovechnikov.voting.util.exception.NotFoundException;
+import ru.aovechnikov.voting.util.exception.TimeExceedException;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Objects;
+
+import static ru.aovechnikov.voting.util.DateTimeUtil.TIME_FOR_VOTE;
+import static ru.aovechnikov.voting.util.DateTimeUtil.getCurrentDate;
 
 /**
  * Class for data validation
@@ -42,7 +50,7 @@ public class ValidationUtil {
     }
 
     /**
-     * Checks that {@link HasId#getId()} equals id  otherwise {@link IllegalArgumentException }.
+     * Checks that {@link HasId#getId()} equals id  otherwise throws {@link IllegalArgumentException }.
      * if {@link HasId#getId()} is null,  then it is assigned the passed value id.
      */
     public static void checkIdConsistent(HasId bean, int id){
@@ -51,6 +59,29 @@ public class ValidationUtil {
      }else if (bean.getId() != id){
          throw new IllegalArgumentException(String.format("%s must be with id=%d", bean, id));
      }
+    }
+
+    /**
+     * Checks that {@code date} equals current date, otherwise throws {@link IllegalArgumentException }.
+     *
+     * @param date checked date
+     */
+    public static void checkDateConsistent(LocalDate date){
+        if (!Objects.equals(date, getCurrentDate())){
+            throw new IllegalArgumentException(String.format("You cannot voting for past menu with date %s", date));
+        }
+    }
+
+    /**
+     * Checks if this {@code time} is before {@link DateTimeUtil#TIME_FOR_VOTE}, otherwise
+     * throws {@link TimeExceedException}.
+     *
+     * @param time
+     */
+    public static void checkTimeForVote(LocalTime time){
+        if (time.isAfter(TIME_FOR_VOTE)){
+            throw new TimeExceedException("The voting can only be changed until 11 am");
+        }
     }
 
     /**

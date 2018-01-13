@@ -56,6 +56,7 @@ public class RestaurantServiceImpl implements RestaurantService{
      */
     @Override
     public Page<Restaurant> findByName(String name, Pageable pageable) {
+        Assert.notNull(name, "restaurant's name must be not null");
         return repository.findByName(name, pageable);
     }
 

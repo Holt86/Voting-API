@@ -2,14 +2,21 @@ package ru.aovechnikov.voting.to;
 
 import ru.aovechnikov.voting.HasId;
 
-abstract public class BaseTo implements HasId {
+/**
+ * Base class for DTO with {@code id}
+ *
+ * @author - A.Ovechnikov
+ * @date - 12.01.2018
+ */
+
+abstract public class HasIdTo implements HasId {
 
     protected Integer id;
 
-    public BaseTo() {
+    public HasIdTo() {
     }
 
-    public BaseTo(Integer id) {
+    public HasIdTo(Integer id) {
         this.id = id;
     }
 

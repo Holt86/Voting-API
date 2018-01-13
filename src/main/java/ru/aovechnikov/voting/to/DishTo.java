@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class DishTo extends BaseTo {
+public class DishTo extends HasIdTo {
 
     @NotBlank
     private String name;

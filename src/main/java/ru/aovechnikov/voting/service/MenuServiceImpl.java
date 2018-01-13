@@ -13,7 +13,6 @@ import ru.aovechnikov.voting.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 
-import static ru.aovechnikov.voting.util.DateTimeUtil.getCurrentDateIfNull;
 import static ru.aovechnikov.voting.util.ValidationUtil.checkNotFound;
 import static ru.aovechnikov.voting.util.ValidationUtil.checkNotFoundWithId;
 
@@ -36,7 +35,7 @@ public class MenuServiceImpl implements MenuService {
      * {@inheritDoc}
      */
     @Override
-    public Menu findById(int id) throws NotFoundException {
+    public Menu findById(int id){
         return (menuRepository.findById(id)).orElseThrow(() ->
                 new NotFoundException("id=" + id));
     }
@@ -45,7 +44,7 @@ public class MenuServiceImpl implements MenuService {
      * {@inheritDoc}
      */
     @Override
-    public void delete(int id) throws NotFoundException {
+    public void delete(int id){
         checkNotFound(menuRepository.delete(id) != 0, id);
     }
 
@@ -83,7 +82,8 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     public Page<Menu> findByDate(LocalDate date, Pageable pageable) {
-        return menuRepository.findByDate(getCurrentDateIfNull(date), pageable);
+        Assert.notNull(date, "date must be not null");
+        return menuRepository.findByDate(date, pageable);
     }
 
     /**
