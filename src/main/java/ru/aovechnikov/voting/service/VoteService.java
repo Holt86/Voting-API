@@ -4,11 +4,14 @@ import ru.aovechnikov.voting.controllers.VoteController;
 import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.model.User;
 import ru.aovechnikov.voting.model.Vote;
+import ru.aovechnikov.voting.to.ResultTo;
 import ru.aovechnikov.voting.to.VoteTo;
 import ru.aovechnikov.voting.util.DateTimeUtil;
 import ru.aovechnikov.voting.util.exception.TimeExceedException;
 
 import java.time.LocalDate;
+import java.util.List;
+
 /**
  * Service interface for {@link Vote} domain objects.
  * Mostly used as a facade for {@link VoteController}.
@@ -42,5 +45,14 @@ public interface VoteService {
      * @return {@link Vote}
      */
     Vote getVoteForUserByDate(int userId, LocalDate date);
+
+    /**
+     * The returned {@link List} of {@link ResultTo} by {@code date}.
+     * If {@code date} is {@literal null} throws {@link IllegalArgumentException}.
+     *
+     * @param date Value to search for
+     * @return {@link List} of {@link ResultTo}
+     */
+    List<ResultTo> getAllResultToByDate(LocalDate date);
 
 }

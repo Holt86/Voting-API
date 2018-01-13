@@ -64,4 +64,9 @@ public class VoteServiceImplTest extends AbstractServiceTest {
         Vote updated = getUpdatedVote();
         service.vote(updated.getUser().getId(), updated.getMenu().getId());
     }
+
+    @Test
+    public void testGetAllResultToByDate() throws Exception {
+        MATCHER_FOR_RESULT_TO.assertCollectionsEquals(Arrays.asList(RESULT_TO_MENU_1, RESULT_TO_MENU_2), service.getAllResultToByDate(DATE_1));
+    }
 }

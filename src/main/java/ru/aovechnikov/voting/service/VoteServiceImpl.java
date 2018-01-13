@@ -8,15 +8,15 @@ import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.model.Vote;
 import ru.aovechnikov.voting.repository.UserRepository;
 import ru.aovechnikov.voting.repository.VoteRepository;
+import ru.aovechnikov.voting.to.ResultTo;
 import ru.aovechnikov.voting.to.VoteTo;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static ru.aovechnikov.voting.util.DateTimeUtil.getCurrentDate;
 import static ru.aovechnikov.voting.util.DateTimeUtil.getCurrentTime;
-import static ru.aovechnikov.voting.util.ValidationUtil.checkDateConsistent;
-import static ru.aovechnikov.voting.util.ValidationUtil.checkNotFound;
-import static ru.aovechnikov.voting.util.ValidationUtil.checkTimeForVote;
+import static ru.aovechnikov.voting.util.ValidationUtil.*;
 
 /**
  * Implementation of the {@link VoteService}
@@ -63,5 +63,14 @@ public class VoteServiceImpl implements VoteService{
     public Vote getVoteForUserByDate(int userId, LocalDate date) {
         Assert.notNull(date, "date must be not null");
         return checkNotFound(voteRepository.getVoteWithMenuForUserByDate(userId, date), String.format("Vote for user with id=%s by datetime %s", userId, date));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ResultTo> getAllResultToByDate(LocalDate date) {
+        Assert.notNull(date, "date must be not null");
+        return voteRepository.getAllResultToByDate(date);
     }
 }

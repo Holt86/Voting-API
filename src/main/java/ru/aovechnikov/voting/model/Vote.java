@@ -2,6 +2,7 @@ package ru.aovechnikov.voting.model;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.aovechnikov.voting.to.ResultTo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,10 +13,26 @@ import java.time.LocalDate;
  * @author - A.Ovechnikov
  * @date - 09.01.2018
  */
+@SqlResultSetMapping(
+        name = "ResultToMapping",
+        classes = @ConstructorResult(
+                targetClass = ResultTo.class,
+                columns = {@ColumnResult(name = "id", type = Integer.class),
+                        @ColumnResult(name = "nameRestaurant", type = String.class),
+                        @ColumnResult(name = "date", type = LocalDate.class),
+                        @ColumnResult(name = "countVotes", type = Integer.class)}))
+@NamedNativeQueries({
+        @NamedNativeQuery(name = Vote.GET_COUNT_VOTES_FOR_MENU_BY_DATE, query =
+                "SELECT m.id, r.name AS nameRestaurant, m.date, count(v.id) AS countVotes FROM menu m LEFT JOIN user_voter v ON m.id=v.menu_id " +
+                        "LEFT JOIN restaurant r ON m.restaurant_id=r.id WHERE m.date=:date GROUP BY m.id, r.name ORDER BY countVotes DESC",
+                resultSetMapping = "ResultToMapping")
+})
 
 @Entity
 @Table(name = "user_voter",uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_vote"}, name = "user_id_date_vote_idx")})
 public class Vote extends AbstractBaseEntity {
+
+    public static final String GET_COUNT_VOTES_FOR_MENU_BY_DATE = "Vote.getAllResultToByDate";
 
     @Column(name = "date_vote", nullable = false, columnDefinition = "date default now()")
     @NotNull
