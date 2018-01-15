@@ -23,7 +23,11 @@ import static ru.aovechnikov.voting.testutil.testdata.DishTestData.*;
 import static ru.aovechnikov.voting.testutil.testdata.MenuTestData.MENU_1;
 import static ru.aovechnikov.voting.testutil.testdata.MenuTestData.MENU_1_ID;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ADMIN;
+import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ID_NOT_FOUND;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
+import static ru.aovechnikov.voting.util.exception.ErrorType.APP_ERROR;
+import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_NOT_FOUND;
+import static ru.aovechnikov.voting.util.exception.ErrorType.VALIDATION_ERROR;
 import static ru.aovechnikov.voting.web.controllers.DishController.URL_DISH;
 
 /**
@@ -133,5 +137,62 @@ public class DishControllerTest extends AbstractControllerTest{
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
                 .andDo(print());
         verifyJsonForMenu(actions, MENU_1);
+    }
+
+    @Test
+    public void testUpdateDishConsistentId() throws Exception {
+        Dish updated = getUpdatedDish();
+        mockMvc.perform(put(URL_TEST + DISH_1_ID_MENU_2)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.type").value(APP_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testValidationDishUpdate() throws Exception {
+        Dish updated = getUpdatedDish();
+        updated.setName("");
+        mockMvc.perform(put(URL_TEST + updated.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.type").value(VALIDATION_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testFindByIdNotFound() throws Exception {
+        mockMvc.perform(get(URL_TEST + ID_NOT_FOUND)
+                .with(httpBasic(USER1)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andDo(print());
+    }
+
+    @Test
+    public void testDeleteNotFound() throws Exception {
+        mockMvc.perform(delete(URL_TEST + ID_NOT_FOUND)
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testUpdateNotFound() throws Exception {
+        Dish updated = getUpdatedDish();
+        updated.setId(ID_NOT_FOUND);
+        mockMvc.perform(put(URL_TEST + updated.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
     }
 }

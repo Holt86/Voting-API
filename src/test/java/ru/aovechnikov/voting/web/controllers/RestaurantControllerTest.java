@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.model.Restaurant;
 import ru.aovechnikov.voting.service.MenuService;
@@ -23,10 +25,13 @@ import static ru.aovechnikov.voting.testutil.TestUtil.getIdFromLink;
 import static ru.aovechnikov.voting.testutil.TestUtil.httpBasic;
 import static ru.aovechnikov.voting.testutil.VerifyJsonPathUtil.verifyJsonForRestaurant;
 import static ru.aovechnikov.voting.testutil.testdata.MenuTestData.MATCHER_FOR_MENU;
+import static ru.aovechnikov.voting.testutil.testdata.MenuTestData.MENU_1;
 import static ru.aovechnikov.voting.testutil.testdata.MenuTestData.getCreatedMenu;
 import static ru.aovechnikov.voting.testutil.testdata.RestaurantTestData.*;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ADMIN;
+import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ID_NOT_FOUND;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
+import static ru.aovechnikov.voting.util.exception.ErrorType.*;
 import static ru.aovechnikov.voting.web.controllers.RestaurantController.URL_REST;
 
 /**
@@ -137,4 +142,80 @@ public class RestaurantControllerTest extends AbstractControllerTest {
         MATCHER_FOR_MENU.assertEquals(created, menuService.findById(created.getId()));
         VerifyJsonPathUtil.verifyJsonForMenu(actions, created);
     }
+
+    @Test
+    public void testNotFound() throws Exception {
+        mockMvc.perform(get(URL_TEST + ID_NOT_FOUND)
+                .with(httpBasic(USER1)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testDeleteNotFound() throws Exception {
+        mockMvc.perform(delete(URL_TEST + ID_NOT_FOUND)
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testDuplicateCreateRestaurant() throws Exception {
+        Restaurant created = getCreatedRestaurant();
+        created.setName(MAMA_ROMA.getName());
+        mockMvc.perform(post(URL_TEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(created))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isConflict())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(DATA_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testDuplicateCreateMenu() throws Exception {
+        Menu created = getCreatedMenu();
+        created.setDate(MENU_1.getDate());
+        mockMvc.perform(post(URL_TEST + MAMA_ROMA_ID + "/menus")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(created))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isConflict())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andDo(print());
+
+    }
+
+    @Test
+    public void testUpdateConsistentId() throws Exception {
+        Restaurant updated = getUpdatedRestaurant();
+        mockMvc.perform(put(URL_TEST + GRILL_MASTER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(APP_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testValidationUpdate() throws Exception {
+        Restaurant updated = getUpdatedRestaurant();
+        updated.setName("");
+        mockMvc.perform(put(URL_TEST + updated.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(VALIDATION_ERROR.name()))
+                .andDo(print());
+    }
+
 }

@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.aovechnikov.voting.model.User;
 import ru.aovechnikov.voting.service.UserService;
 import ru.aovechnikov.voting.to.UserTo;
@@ -15,6 +17,7 @@ import java.util.Arrays;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.aovechnikov.voting.model.Role.ROLE_USER;
 import static ru.aovechnikov.voting.testutil.TestUtil.PAGEABLE;
@@ -22,6 +25,9 @@ import static ru.aovechnikov.voting.testutil.TestUtil.httpBasic;
 import static ru.aovechnikov.voting.testutil.VerifyJsonPathUtil.verifyJsonForUser;
 import static ru.aovechnikov.voting.testutil.VerifyJsonPathUtil.verifyJsonLinksForProfileUser;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.*;
+import static ru.aovechnikov.voting.util.exception.ErrorType.APP_ERROR;
+import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_ERROR;
+import static ru.aovechnikov.voting.util.exception.ErrorType.VALIDATION_ERROR;
 import static ru.aovechnikov.voting.web.controllers.ProfileUserController.REST_URL;
 
 /**
@@ -66,5 +72,42 @@ public class ProfileUserControllerTest extends AbstractControllerTest{
                 .andDo(print());
         MATCHER_FOR_USER.assertEquals(updated, userService.findById(updated.getId()));
         MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER1, updated, ADMIN), userService.findAll(PAGEABLE).getContent());
+    }
+
+    @Test
+    public void testUpdateInvalid() throws Exception{
+        UserTo updated = new UserTo(USER2.getId(), "", "email@mail.ru", "password");
+        mockMvc.perform(put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(USER2)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.type").value(VALIDATION_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testDuplicateEmail() throws Exception{
+        UserTo updated = new UserTo(USER2.getId(), "updated", USER1.getEmail(), "password");
+        mockMvc.perform(put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(USER2)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.type").value(DATA_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testConsistentIdError() throws Exception{
+        UserTo updated = new UserTo(USER2.getId(), "updated", "email@mail.ru", "password");
+        mockMvc.perform(put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(USER1)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.type").value(APP_ERROR.name()))
+                .andDo(print());
     }
 }

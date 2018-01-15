@@ -20,9 +20,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.aovechnikov.voting.testutil.TestUtil.httpBasic;
 import static ru.aovechnikov.voting.testutil.VerifyJsonPathUtil.verifyJsonForVote;
 import static ru.aovechnikov.voting.testutil.testdata.DateTestData.*;
+import static ru.aovechnikov.voting.testutil.testdata.MenuTestData.MENU_1;
+import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ID_NOT_FOUND;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
 import static ru.aovechnikov.voting.testutil.testdata.VoteTestData.*;
 import static ru.aovechnikov.voting.util.DateTimeUtil.setCurrentDateTime;
+import static ru.aovechnikov.voting.util.exception.ErrorType.APP_ERROR;
+import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_NOT_FOUND;
+import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_LATE_UPDATE;
 import static ru.aovechnikov.voting.web.controllers.VoteController.REST_URL;
 
 /**
@@ -81,6 +86,47 @@ public class VoteControllerTest extends AbstractControllerTest {
                 .andDo(print());
         verifyJsonForVote(actions, updated);
         MATCHER_FOR_VOTE.assertEquals(updated, voteService.getVoteForUserByDate(updated.getUser().getId(), updated.getDate()));
+    }
+
+    @Test
+    public void testUpdateVoteAfterFinalTime() throws Exception {
+        setCurrentDateTime(DATE_TIME2_AFTER);
+        Vote updated = getUpdatedVote();
+        mockMvc.perform(post(URL_TEST + updated.getMenu().getId())
+                .with(httpBasic(updated.getUser())))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.type").value(DATA_LATE_UPDATE.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testGetVoteForUserByDateNotFound() throws Exception {
+        mockMvc.perform(get(URL_TEST + "?date=2017-12-26")
+                .with(httpBasic(VOTE1.getUser())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testVoteNotFoundMenu() throws Exception {
+        Vote updated = getUpdatedVote();
+        mockMvc.perform(post(URL_TEST + ID_NOT_FOUND)
+                .with(httpBasic(updated.getUser())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testVoteForOldMenu() throws Exception {
+        Vote updated = getUpdatedVote();
+        updated.setMenu(MENU_1);
+        mockMvc.perform(post(URL_TEST + updated.getMenu().getId())
+                .with(httpBasic(updated.getUser())))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.type").value(APP_ERROR.name()))
+                .andDo(print());
     }
 
     @Test

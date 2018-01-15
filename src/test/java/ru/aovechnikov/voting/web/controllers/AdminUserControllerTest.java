@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import ru.aovechnikov.voting.model.Role;
 import ru.aovechnikov.voting.model.User;
 import ru.aovechnikov.voting.service.UserService;
 
@@ -19,6 +22,7 @@ import static ru.aovechnikov.voting.model.Role.ROLE_USER;
 import static ru.aovechnikov.voting.testutil.TestUtil.*;
 import static ru.aovechnikov.voting.testutil.VerifyJsonPathUtil.*;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.*;
+import static ru.aovechnikov.voting.util.exception.ErrorType.*;
 import static ru.aovechnikov.voting.web.controllers.AdminUserController.REST_URL;
 
 /**
@@ -168,5 +172,59 @@ public class AdminUserControllerTest extends AbstractControllerTest{
         verifyJsonForUser(actions, disable, ROLE_USER.name());
         verifyJsonLinksForAdminUser(actions, disable);
         MATCHER_FOR_USER.assertEquals(disable, userService.findById(disable.getId()));
+    }
+
+    @Test
+    public void testFindByIdNotFound() throws Exception {
+        mockMvc.perform(get(URL_TEST + ID_NOT_FOUND)
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testDeleteNotFound() throws Exception {
+        mockMvc.perform(delete(URL_TEST + ID_NOT_FOUND)
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
+    }
+    @Test
+    public void testCreateInvalid() throws Exception{
+        User expected = new User(null, null, "", "newPass",  Role.ROLE_USER, Role.ROLE_ADMIN);
+        mockMvc.perform(post(URL_TEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(expected))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.type").value(VALIDATION_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testDuplicateEmail() throws Exception{
+        User expected = new User(null, "newUser", "user1@yandex.ru", "newPass",  Role.ROLE_USER, Role.ROLE_ADMIN);
+        mockMvc.perform(post(URL_TEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(expected))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.type").value(DATA_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testConsistentIdError() throws Exception{
+        User expected = new User(100, "newUser", "user1@yandex.ru", "newPass",  Role.ROLE_USER, Role.ROLE_ADMIN);
+        mockMvc.perform(put(URL_TEST + USER2_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(expected))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.type").value(APP_ERROR.name()))
+                .andDo(print());
     }
 }

@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.aovechnikov.voting.model.Dish;
 import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.service.DishService;
@@ -20,13 +22,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.aovechnikov.voting.testutil.TestUtil.*;
 import static ru.aovechnikov.voting.testutil.VerifyJsonPathUtil.*;
 import static ru.aovechnikov.voting.testutil.testdata.DateTestData.DATE_1;
+import static ru.aovechnikov.voting.testutil.testdata.DishTestData.DISH_1_MENU_1;
 import static ru.aovechnikov.voting.testutil.testdata.DishTestData.MATCHER_FOR_DISH;
 import static ru.aovechnikov.voting.testutil.testdata.DishTestData.getCreatedDish;
 import static ru.aovechnikov.voting.testutil.testdata.MenuTestData.*;
 import static ru.aovechnikov.voting.testutil.testdata.RestaurantTestData.MAMA_ROMA;
 import static ru.aovechnikov.voting.testutil.testdata.RestaurantTestData.MAMA_ROMA_ID;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ADMIN;
+import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ID_NOT_FOUND;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
+import static ru.aovechnikov.voting.util.exception.ErrorType.*;
 import static ru.aovechnikov.voting.web.controllers.MenuController.MENU_URL;
 
 /**
@@ -135,5 +140,75 @@ public class MenuControllerTest extends AbstractControllerTest {
         created.setId(getIdFromLink(actions, "$._links.self.href"));
         MATCHER_FOR_DISH.assertEquals(created, dishService.findById(created.getId()));
         verifyJsonForDish(actions, created);
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testDuplicateCreateDish() throws Exception {
+        Dish created = getCreatedDish();
+        created.setName(DISH_1_MENU_1.getName());
+        mockMvc.perform(post(URL_TEST + MENU_1_ID + "/dishes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(created))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.type").value(DATA_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testUpdateMenuConsistentId() throws Exception {
+        Menu updated = getUpdatedMenu();
+        mockMvc.perform(put(URL_TEST + MENU_2.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.type").value(APP_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testValidationMenuUpdate() throws Exception {
+        Menu updated = getUpdatedMenu();
+        updated.setDate(null);
+        mockMvc.perform(put(URL_TEST + updated.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.type").value(VALIDATION_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testFindByIdNotFound() throws Exception {
+        mockMvc.perform(get(URL_TEST + ID_NOT_FOUND)
+                .with(httpBasic(USER1)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testDeleteNotFound() throws Exception {
+        mockMvc.perform(delete(URL_TEST + ID_NOT_FOUND)
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testUpdateNotFound() throws Exception {
+        Menu updated = getUpdatedMenu();
+        updated.setId(ID_NOT_FOUND);
+        mockMvc.perform(put(URL_TEST + updated.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(ADMIN)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
     }
 }
