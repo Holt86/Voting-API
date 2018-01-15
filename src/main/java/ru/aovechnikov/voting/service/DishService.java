@@ -11,7 +11,7 @@ import ru.aovechnikov.voting.util.exception.NotFoundException;
 import java.time.LocalDate;
 /**
  * Service interface for {@link Dish} domain objects.
- * Mostly used as a facade for {@link DishController}. Also a placeholder for @Transactional.
+ * Mostly used as a facade for {@link DishController}.
  * @author - A.Ovechnikov
  * @date - 11.01.2018
  */

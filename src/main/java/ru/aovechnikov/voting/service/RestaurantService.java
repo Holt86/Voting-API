@@ -9,7 +9,7 @@ import ru.aovechnikov.voting.web.controllers.RestaurantController;
 
 /**
  * Service interface for {@link Restaurant} domain objects.
- * Mostly used as a facade for {@link RestaurantController}. Also a placeholder for @Transactional
+ * Mostly used as a facade for {@link RestaurantController}.
  * @author - A.Ovechnikov
  * @date - 11.01.2018
  */

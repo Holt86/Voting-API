@@ -13,7 +13,6 @@ import ru.aovechnikov.voting.util.exception.NotFoundException;
 /**
  * Service interface for {@link User} domain objects.
  * Mostly used as a facade for {@link AdminUserController} and {@link ProfileUserController}.
- * Also a placeholder for @Secured.
  *
  * @author - A.Ovechnikov
  * @date - 12.01.2018
@@ -75,7 +74,7 @@ public interface UserService {
      */
     void enable(int id, boolean enable);
     /**
-     * Retrieve {@link Page} of {@link User} meeting the paging restriction provided in the {@code Pageable} object.
+     * Retrieves {@link Page} of {@link User} meeting the paging restriction provided in the {@code Pageable} object.
      *
      * @param pageable pagination information
      * @return page of {@link User}.

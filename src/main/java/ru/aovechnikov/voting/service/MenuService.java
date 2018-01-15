@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 /**
  * Service interface for {@link Menu} domain objects.
- * Mostly used as a facade for {@link MenuController}. Also a placeholder for @Transactional
+ * Mostly used as a facade for {@link MenuController}.
  * @author - A.Ovechnikov
  * @date - 11.01.2018
  */
