@@ -9,6 +9,7 @@ import ru.aovechnikov.voting.util.exception.NotFoundException;
 import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 
+import static ru.aovechnikov.voting.testutil.TestUtil.PAGEABLE;
 import static ru.aovechnikov.voting.testutil.testdata.DateTestData.DATE_1;
 import static ru.aovechnikov.voting.testutil.testdata.DishTestData.DISH_1_ID_MENU_1;
 import static ru.aovechnikov.voting.testutil.testdata.MenuTestData.*;
@@ -40,7 +41,7 @@ public class MenuServiceImplTest extends AbstractServiceTest {
     @Test
     public void testDelete() throws Exception {
         service.delete(MENU_1_ID);
-        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(MENU_3), service.findByRestaurantId(MAMA_ROMA_ID, pageable).getContent());
+        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(MENU_3), service.findByRestaurantId(MAMA_ROMA_ID, PAGEABLE).getContent());
     }
 
     @Test(expected = NotFoundException.class)
@@ -52,14 +53,14 @@ public class MenuServiceImplTest extends AbstractServiceTest {
     public void testCreate() throws Exception {
         Menu created = getCreatedMenu();
         service.create(created, CAROLS_ID);
-        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(MENU_1, MENU_2, created), service.findByDate(DATE_1, pageable).getContent());
+        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(MENU_1, MENU_2, created), service.findByDate(DATE_1, PAGEABLE).getContent());
     }
 
     @Test
     public void testUpdate() throws Exception {
         Menu updated = getUpdatedMenu();
         service.update(updated);
-        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(updated, MENU_3), service.findByRestaurantId(MAMA_ROMA_ID, pageable).getContent());
+        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(updated, MENU_3), service.findByRestaurantId(MAMA_ROMA_ID, PAGEABLE).getContent());
     }
 
     @Test(expected = NotFoundException.class)
@@ -71,12 +72,12 @@ public class MenuServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testFindByRestaurantId() throws Exception {
-        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(MENU_1, MENU_3), service.findByRestaurantId(MAMA_ROMA_ID, pageable).getContent());
+        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(MENU_1, MENU_3), service.findByRestaurantId(MAMA_ROMA_ID, PAGEABLE).getContent());
     }
 
     @Test
     public void testFindByDate() throws Exception {
-        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(MENU_1, MENU_2), service.findByDate(DATE_1, pageable).getContent());
+        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(MENU_1, MENU_2), service.findByDate(DATE_1, PAGEABLE).getContent());
     }
 
     @Test

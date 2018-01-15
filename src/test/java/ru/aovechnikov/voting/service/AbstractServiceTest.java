@@ -38,8 +38,6 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 abstract public class AbstractServiceTest {
 
-    public static Pageable pageable = PageRequest.of(0, 20, Sort.by("id"));
-
     @Autowired
     protected JpaUtil jpaUtil;
 

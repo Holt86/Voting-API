@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
+import static ru.aovechnikov.voting.testutil.TestUtil.PAGEABLE;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.*;
 import static ru.aovechnikov.voting.util.UserUtil.asTo;
 
@@ -39,13 +40,13 @@ public class UserServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testFindAll() throws Exception {
-        MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER1, USER2, ADMIN), service.findAll(pageable).getContent());
+        MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER1, USER2, ADMIN), service.findAll(PAGEABLE).getContent());
     }
 
     @Test
     public void testDelete() throws Exception {
         service.delete(USER1_ID);
-        MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER2, ADMIN), service.findAll(pageable).getContent());
+        MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER2, ADMIN), service.findAll(PAGEABLE).getContent());
     }
 
     @Test(expected = NotFoundException.class)
@@ -58,7 +59,7 @@ public class UserServiceImplTest extends AbstractServiceTest {
         User updated = getUpdatedUser();
         service.save(updated);
         MATCHER_FOR_USER.assertEquals(updated, service.findById(updated.getId()));
-        MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER1, updated, ADMIN), service.findAll(pageable).getContent());
+        MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER1, updated, ADMIN), service.findAll(PAGEABLE).getContent());
     }
 
     @Test
@@ -67,7 +68,7 @@ public class UserServiceImplTest extends AbstractServiceTest {
         UserTo updatedTo = asTo(updated);
         service.update(updatedTo);
         MATCHER_FOR_USER.assertEquals(updated, service.findById(updated.getId()));
-        MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER1, updated, ADMIN), service.findAll(pageable).getContent());
+        MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER1, updated, ADMIN), service.findAll(PAGEABLE).getContent());
     }
 
     @Test(expected = NotFoundException.class)
@@ -82,7 +83,7 @@ public class UserServiceImplTest extends AbstractServiceTest {
         User created = getCreatedUser();
         service.save(created);
         MATCHER_FOR_USER.assertEquals(created, service.findById(created.getId()));
-        MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER1, USER2, ADMIN, created), service.findAll(pageable).getContent());
+        MATCHER_FOR_USER.assertCollectionsEquals(Arrays.asList(USER1, USER2, ADMIN, created), service.findAll(PAGEABLE).getContent());
     }
 
     @Test
