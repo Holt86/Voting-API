@@ -1,5 +1,8 @@
 package ru.aovechnikov.voting.to;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.time.LocalDate;
 
 /**
@@ -8,7 +11,7 @@ import java.time.LocalDate;
  * @author - A.Ovechnikov
  * @date - 12.01.2018
  */
-
+@JsonPropertyOrder({"countVotes","nameRestaurant", "id"})
 public class ResultTo extends HasIdTo {
 
     private String nameRestaurant;
@@ -21,6 +24,7 @@ public class ResultTo extends HasIdTo {
     }
 
     @Override
+    @JsonProperty(value = "menuId")
     public Integer getId() {
         return super.getId();
     }
@@ -66,7 +70,7 @@ public class ResultTo extends HasIdTo {
         return "ResultTo{" +
                 "id='" + id + '\'' +
                 "name='" + nameRestaurant + '\'' +
-                ", countVotes=" + countVotes +
+                ", countVotes=" + countVotes + '\'' +
                 ", date=" + date +
                 '}';
     }

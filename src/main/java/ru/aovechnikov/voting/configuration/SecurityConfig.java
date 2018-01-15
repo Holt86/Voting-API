@@ -53,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/rest/admin/**").hasAuthority(Role.ROLE_ADMIN.getAuthority())
                 .antMatchers("/rest/**").authenticated()
+                .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();
     }

@@ -1,5 +1,7 @@
 package ru.aovechnikov.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import ru.aovechnikov.voting.to.ResultTo;
@@ -30,6 +32,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "user_voter",uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_vote"}, name = "user_id_date_vote_idx")})
+@JsonIgnoreProperties(value = { "id" })
 public class Vote extends AbstractBaseEntity {
 
     public static final String GET_COUNT_VOTES_FOR_MENU_BY_DATE = "Vote.getAllResultToByDate";
@@ -42,12 +45,14 @@ public class Vote extends AbstractBaseEntity {
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
+    @JsonIgnore
     private Menu menu;
 
     public Vote() {
