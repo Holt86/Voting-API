@@ -1,9 +1,9 @@
-package ru.aovechnikov.voting.web.halresource;
+package ru.aovechnikov.voting.web.servlet.halresource;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.hateoas.ResourceSupport;
 import ru.aovechnikov.voting.model.Dish;
-import ru.aovechnikov.voting.web.json.DoubleToPriceViewSerializer;
+import ru.aovechnikov.voting.web.servlet.json.DoubleToPriceViewSerializer;
 
 /**
  * DTO class for creating resource representation for {@link Dish}.

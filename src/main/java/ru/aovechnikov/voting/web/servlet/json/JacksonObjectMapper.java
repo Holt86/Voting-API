@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.json;
+package ru.aovechnikov.voting.web.servlet.json;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;

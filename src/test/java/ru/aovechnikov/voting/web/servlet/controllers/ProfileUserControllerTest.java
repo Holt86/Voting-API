@@ -1,10 +1,11 @@
-package ru.aovechnikov.voting.web.controllers;
+package ru.aovechnikov.voting.web.servlet.controllers;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.aovechnikov.voting.model.User;
@@ -28,7 +29,7 @@ import static ru.aovechnikov.voting.testutil.testdata.UserTestData.*;
 import static ru.aovechnikov.voting.util.exception.ErrorType.APP_ERROR;
 import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_ERROR;
 import static ru.aovechnikov.voting.util.exception.ErrorType.VALIDATION_ERROR;
-import static ru.aovechnikov.voting.web.controllers.ProfileUserController.REST_URL;
+import static ru.aovechnikov.voting.web.servlet.controllers.ProfileUserController.REST_URL;
 
 /**
  * For testing {@link ProfileUserController}

@@ -1,10 +1,9 @@
-package ru.aovechnikov.voting.web.halresource;
+package ru.aovechnikov.voting.web.servlet.halresource;
 
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.hateoas.mvc.IdentifiableResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 import ru.aovechnikov.voting.model.User;
-import ru.aovechnikov.voting.web.controllers.AdminUserController;
+import ru.aovechnikov.voting.web.servlet.controllers.AdminUserController;
 
 import java.util.List;
 

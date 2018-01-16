@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web;
+package ru.aovechnikov.voting.web.servlet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

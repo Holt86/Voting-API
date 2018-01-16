@@ -1,9 +1,9 @@
-package ru.aovechnikov.voting.web.halresource;
+package ru.aovechnikov.voting.web.servlet.halresource;
 
 import org.springframework.hateoas.mvc.IdentifiableResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 import ru.aovechnikov.voting.model.Dish;
-import ru.aovechnikov.voting.web.controllers.DishController;
+import ru.aovechnikov.voting.web.servlet.controllers.DishController;
 
 import java.util.List;
 

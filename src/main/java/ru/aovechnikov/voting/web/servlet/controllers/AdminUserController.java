@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.controllers;
+package ru.aovechnikov.voting.web.servlet.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.aovechnikov.voting.model.User;
 import ru.aovechnikov.voting.service.UserService;
-import ru.aovechnikov.voting.web.halresource.UserResource;
-import ru.aovechnikov.voting.web.halresource.UserResourceAssembler;
+import ru.aovechnikov.voting.web.servlet.halresource.UserResource;
+import ru.aovechnikov.voting.web.servlet.halresource.UserResourceAssembler;
 
 import javax.validation.Valid;
 

@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.controllers;
+package ru.aovechnikov.voting.web.servlet.controllers;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import static ru.aovechnikov.voting.testutil.TestUtil.*;
 import static ru.aovechnikov.voting.testutil.VerifyJsonPathUtil.*;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.*;
 import static ru.aovechnikov.voting.util.exception.ErrorType.*;
-import static ru.aovechnikov.voting.web.controllers.AdminUserController.REST_URL;
+import static ru.aovechnikov.voting.web.servlet.controllers.AdminUserController.REST_URL;
 
 /**
  * For testing {@link AdminUserController}

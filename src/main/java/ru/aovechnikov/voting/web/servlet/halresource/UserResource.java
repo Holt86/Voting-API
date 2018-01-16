@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.halresource;
+package ru.aovechnikov.voting.web.servlet.halresource;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.hateoas.ResourceSupport;

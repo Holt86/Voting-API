@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import ru.aovechnikov.voting.web.json.HalHttpMessageConverter;
+import ru.aovechnikov.voting.web.servlet.json.HalHttpMessageConverter;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import java.util.List;
 @EnableWebMvc
 @Configuration
 @EnableSpringDataWebSupport
-@ComponentScan(basePackages = {"ru.aovechnikov.voting.web"})
+@ComponentScan(basePackages = {"ru.aovechnikov.voting.web.servlet"})
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Autowired

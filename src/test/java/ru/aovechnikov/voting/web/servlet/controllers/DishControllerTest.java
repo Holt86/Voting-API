@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.controllers;
+package ru.aovechnikov.voting.web.servlet.controllers;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
 import static ru.aovechnikov.voting.util.exception.ErrorType.APP_ERROR;
 import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_NOT_FOUND;
 import static ru.aovechnikov.voting.util.exception.ErrorType.VALIDATION_ERROR;
-import static ru.aovechnikov.voting.web.controllers.DishController.URL_DISH;
+import static ru.aovechnikov.voting.web.servlet.controllers.DishController.URL_DISH;
 
 /**
  * For testing {@link DishController}

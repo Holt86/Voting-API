@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.halresource;
+package ru.aovechnikov.voting.web.servlet.halresource;
 
 import org.springframework.hateoas.ResourceSupport;
 import ru.aovechnikov.voting.model.Menu;

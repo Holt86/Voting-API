@@ -3,8 +3,8 @@ package ru.aovechnikov.voting.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.aovechnikov.voting.web.controllers.AdminUserController;
-import ru.aovechnikov.voting.web.controllers.ProfileUserController;
+import ru.aovechnikov.voting.web.servlet.controllers.AdminUserController;
+import ru.aovechnikov.voting.web.servlet.controllers.ProfileUserController;
 import ru.aovechnikov.voting.model.User;
 import ru.aovechnikov.voting.to.UserTo;
 import ru.aovechnikov.voting.util.UserUtil;

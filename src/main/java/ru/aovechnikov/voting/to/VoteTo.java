@@ -1,6 +1,6 @@
 package ru.aovechnikov.voting.to;
 
-import ru.aovechnikov.voting.web.controllers.VoteController;
+import ru.aovechnikov.voting.web.servlet.controllers.VoteController;
 import ru.aovechnikov.voting.model.Vote;
 import ru.aovechnikov.voting.service.VoteService;
 

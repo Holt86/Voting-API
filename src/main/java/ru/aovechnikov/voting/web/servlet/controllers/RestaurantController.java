@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.controllers;
+package ru.aovechnikov.voting.web.servlet.controllers;
 
 
 import org.slf4j.Logger;
@@ -17,10 +17,10 @@ import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.model.Restaurant;
 import ru.aovechnikov.voting.service.MenuService;
 import ru.aovechnikov.voting.service.RestaurantService;
-import ru.aovechnikov.voting.web.halresource.MenuResource;
-import ru.aovechnikov.voting.web.halresource.MenuResourceAssembler;
-import ru.aovechnikov.voting.web.halresource.RestaurantResource;
-import ru.aovechnikov.voting.web.halresource.RestaurantResourceAssembler;
+import ru.aovechnikov.voting.web.servlet.halresource.MenuResource;
+import ru.aovechnikov.voting.web.servlet.halresource.MenuResourceAssembler;
+import ru.aovechnikov.voting.web.servlet.halresource.RestaurantResource;
+import ru.aovechnikov.voting.web.servlet.halresource.RestaurantResourceAssembler;
 
 import javax.validation.Valid;
 

@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.json;
+package ru.aovechnikov.voting.web.servlet.json;
 
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
@@ -6,7 +6,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 
-import static ru.aovechnikov.voting.web.json.JacksonObjectMapper.getMapper;
+import static ru.aovechnikov.voting.web.servlet.json.JacksonObjectMapper.getMapper;
 
 /**
  * Implementing {@link HttpMessageConverter} for convert {@link MediaTypes#HAL_JSON_UTF8_VALUE} and {@link MediaType#APPLICATION_JSON}.

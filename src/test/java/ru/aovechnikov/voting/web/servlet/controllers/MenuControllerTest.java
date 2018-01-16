@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.controllers;
+package ru.aovechnikov.voting.web.servlet.controllers;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ADMIN;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ID_NOT_FOUND;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
 import static ru.aovechnikov.voting.util.exception.ErrorType.*;
-import static ru.aovechnikov.voting.web.controllers.MenuController.MENU_URL;
+import static ru.aovechnikov.voting.web.servlet.controllers.MenuController.MENU_URL;
 
 /**
  * For testing {@link MenuController}.

@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.controllers;
+package ru.aovechnikov.voting.web.servlet.controllers;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ import static ru.aovechnikov.voting.util.DateTimeUtil.setCurrentDateTime;
 import static ru.aovechnikov.voting.util.exception.ErrorType.APP_ERROR;
 import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_NOT_FOUND;
 import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_LATE_UPDATE;
-import static ru.aovechnikov.voting.web.controllers.VoteController.REST_URL;
+import static ru.aovechnikov.voting.web.servlet.controllers.VoteController.REST_URL;
 
 /**
  * For testing {@link VoteController}

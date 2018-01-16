@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.controllers;
+package ru.aovechnikov.voting.web.servlet.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,10 @@ import ru.aovechnikov.voting.model.Dish;
 import ru.aovechnikov.voting.model.Menu;
 import ru.aovechnikov.voting.service.DishService;
 import ru.aovechnikov.voting.service.MenuService;
-import ru.aovechnikov.voting.web.halresource.*;
+import ru.aovechnikov.voting.web.servlet.halresource.DishResource;
+import ru.aovechnikov.voting.web.servlet.halresource.DishResourceAssembler;
+import ru.aovechnikov.voting.web.servlet.halresource.MenuResource;
+import ru.aovechnikov.voting.web.servlet.halresource.MenuResourceAssembler;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -58,6 +61,7 @@ public class DishController {
      * Finds dish by {@code id}.
      *
      * @param id id of the dish to search for
+
      * @return {@link DishResource} with status {@link HttpStatus#OK}.
      */
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_UTF8_VALUE)
@@ -136,7 +140,7 @@ public class DishController {
      * Finds menu by id of dish {@code dishId}.
      *
      * @param dishId dishId of the dish to search for
-     * @return {@link RestaurantResource} with status {@link HttpStatus#OK}.
+     * @return {@link MenuResource} with status {@link HttpStatus#OK}.
      */
     @GetMapping(value = "/{id}/menu", produces = MediaTypes.HAL_JSON_UTF8_VALUE)
     public ResponseEntity<MenuResource> findMenuForDish(@PathVariable("id") int dishId){

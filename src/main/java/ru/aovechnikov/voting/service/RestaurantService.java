@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.aovechnikov.voting.model.Restaurant;
 import ru.aovechnikov.voting.util.exception.NotFoundException;
-import ru.aovechnikov.voting.web.controllers.RestaurantController;
+import ru.aovechnikov.voting.web.servlet.controllers.RestaurantController;
 
 
 /**

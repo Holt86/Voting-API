@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.controllers;
+package ru.aovechnikov.voting.web.servlet.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.runner.RunWith;
@@ -14,7 +14,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import ru.aovechnikov.voting.configuration.AppConfiguration;
 import ru.aovechnikov.voting.configuration.DbConfiguration;
 import ru.aovechnikov.voting.configuration.WebMvcConfiguration;
-import ru.aovechnikov.voting.web.json.JacksonObjectMapper;
+import ru.aovechnikov.voting.web.servlet.json.JacksonObjectMapper;
 
 import javax.annotation.PostConstruct;
 

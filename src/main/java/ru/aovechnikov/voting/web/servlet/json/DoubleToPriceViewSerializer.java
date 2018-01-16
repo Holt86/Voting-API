@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.json;
+package ru.aovechnikov.voting.web.servlet.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

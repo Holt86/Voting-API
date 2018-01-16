@@ -1,4 +1,4 @@
-package ru.aovechnikov.voting.web.controllers;
+package ru.aovechnikov.voting.web.servlet.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ import ru.aovechnikov.voting.model.Restaurant;
 import ru.aovechnikov.voting.service.DishService;
 import ru.aovechnikov.voting.service.MenuService;
 import ru.aovechnikov.voting.service.RestaurantService;
-import ru.aovechnikov.voting.web.halresource.*;
+import ru.aovechnikov.voting.web.servlet.halresource.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
