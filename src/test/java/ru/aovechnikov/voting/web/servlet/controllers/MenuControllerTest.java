@@ -211,4 +211,26 @@ public class MenuControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
                 .andDo(print());
     }
+
+    @Test
+    public void testForbidden() throws Exception {
+        Menu updated = getUpdatedMenu();
+        mockMvc.perform(put(URL_TEST + updated.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updated))
+                .with(httpBasic(USER1)))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(ACCESS_DENIED.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testUnAuthentication() throws Exception {
+        mockMvc.perform(get(URL_TEST + MENU_1_ID))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(NOT_AUTHENTICATION.name()))
+                .andDo(print());
+    }
 }

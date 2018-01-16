@@ -227,4 +227,23 @@ public class AdminUserControllerTest extends AbstractControllerTest{
                 .andExpect(jsonPath("$.type").value(APP_ERROR.name()))
                 .andDo(print());
     }
+
+    @Test
+    public void testForbidden() throws Exception {
+        mockMvc.perform(delete(URL_TEST + USER1_ID)
+                .with(httpBasic(USER1)))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(ACCESS_DENIED.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testUnAuthentication() throws Exception {
+        mockMvc.perform(delete(URL_TEST + USER1_ID))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(NOT_AUTHENTICATION.name()))
+                .andDo(print());
+    }
 }

@@ -25,9 +25,7 @@ import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ID_NOT_FOUND;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
 import static ru.aovechnikov.voting.testutil.testdata.VoteTestData.*;
 import static ru.aovechnikov.voting.util.DateTimeUtil.setCurrentDateTime;
-import static ru.aovechnikov.voting.util.exception.ErrorType.APP_ERROR;
-import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_NOT_FOUND;
-import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_LATE_UPDATE;
+import static ru.aovechnikov.voting.util.exception.ErrorType.*;
 import static ru.aovechnikov.voting.web.servlet.controllers.VoteController.REST_URL;
 
 /**
@@ -148,5 +146,16 @@ public class VoteControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$[1].date").value(RESULT_TO_MENU_2.getDate().toString()))
                 .andExpect(jsonPath("$[1]._links.menu.href", endsWith("/menus/" + RESULT_TO_MENU_2.getId())))
                 .andExpect(jsonPath("$[1]._links.restaurant.href", endsWith("/menus/" + RESULT_TO_MENU_2.getId() + "/restaurant")));
+    }
+
+    @Test
+    public void testUnAuthentication() throws Exception {
+        setCurrentDateTime(DATE_TIME2_AFTER);
+        Vote created = getCreatedVote();
+        mockMvc.perform(post(URL_TEST + created.getMenu().getId()))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(NOT_AUTHENTICATION.name()))
+                .andDo(print());
     }
 }

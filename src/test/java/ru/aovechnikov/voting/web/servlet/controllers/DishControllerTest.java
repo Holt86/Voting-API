@@ -25,9 +25,8 @@ import static ru.aovechnikov.voting.testutil.testdata.MenuTestData.MENU_1_ID;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ADMIN;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ID_NOT_FOUND;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
-import static ru.aovechnikov.voting.util.exception.ErrorType.APP_ERROR;
-import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_NOT_FOUND;
-import static ru.aovechnikov.voting.util.exception.ErrorType.VALIDATION_ERROR;
+import static ru.aovechnikov.voting.util.exception.ErrorType.*;
+import static ru.aovechnikov.voting.util.exception.ErrorType.NOT_AUTHENTICATION;
 import static ru.aovechnikov.voting.web.servlet.controllers.DishController.URL_DISH;
 
 /**
@@ -193,6 +192,25 @@ public class DishControllerTest extends AbstractControllerTest{
                 .with(httpBasic(ADMIN)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.type").value(DATA_NOT_FOUND.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testForbidden() throws Exception {
+        mockMvc.perform(delete(URL_TEST + DISH_1_ID_MENU_1)
+                .with(httpBasic(USER1)))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(ACCESS_DENIED.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testUnAuthentication() throws Exception {
+        mockMvc.perform(get(URL_TEST + DISH_1_ID_MENU_1))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(NOT_AUTHENTICATION.name()))
                 .andDo(print());
     }
 }

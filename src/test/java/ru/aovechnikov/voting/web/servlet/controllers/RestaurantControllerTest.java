@@ -218,4 +218,22 @@ public class RestaurantControllerTest extends AbstractControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    public void testForbidden() throws Exception {
+        mockMvc.perform(delete(URL_TEST + MAMA_ROMA_ID)
+                .with(httpBasic(USER1)))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(ACCESS_DENIED.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testUnAuthentication() throws Exception {
+        mockMvc.perform(get(URL_TEST + MAMA_ROMA_ID))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(NOT_AUTHENTICATION.name()))
+                .andDo(print());
+    }
 }

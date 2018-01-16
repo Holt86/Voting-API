@@ -13,7 +13,8 @@ public enum ErrorType {
     VALIDATION_ERROR("error.validationError"),
     DATA_ERROR("error.dataError"),
     APP_ERROR("error.appError"),
-    ACCESS_DENIED("error.accessDenied");
+    ACCESS_DENIED("error.accessDenied"),
+    NOT_AUTHENTICATION("error.authentication");
 
 
     private final String errorCode;

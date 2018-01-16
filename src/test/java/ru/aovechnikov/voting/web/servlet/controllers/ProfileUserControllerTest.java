@@ -26,9 +26,7 @@ import static ru.aovechnikov.voting.testutil.TestUtil.httpBasic;
 import static ru.aovechnikov.voting.testutil.VerifyJsonPathUtil.verifyJsonForUser;
 import static ru.aovechnikov.voting.testutil.VerifyJsonPathUtil.verifyJsonLinksForProfileUser;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.*;
-import static ru.aovechnikov.voting.util.exception.ErrorType.APP_ERROR;
-import static ru.aovechnikov.voting.util.exception.ErrorType.DATA_ERROR;
-import static ru.aovechnikov.voting.util.exception.ErrorType.VALIDATION_ERROR;
+import static ru.aovechnikov.voting.util.exception.ErrorType.*;
 import static ru.aovechnikov.voting.web.servlet.controllers.ProfileUserController.REST_URL;
 
 /**
@@ -109,6 +107,15 @@ public class ProfileUserControllerTest extends AbstractControllerTest{
                 .with(httpBasic(USER1)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.type").value(APP_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    public void testUnAuthentication() throws Exception {
+        mockMvc.perform(delete(REST_URL))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.type").value(NOT_AUTHENTICATION.name()))
                 .andDo(print());
     }
 }
