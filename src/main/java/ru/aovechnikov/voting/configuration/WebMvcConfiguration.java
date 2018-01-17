@@ -35,14 +35,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     private HalHttpMessageConverter halHttpMessageConverter;
 
     /**
-     Views static resources
-     */
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
-
-    /**
      * Add handlers to serve static resources.
      */
     @Override
