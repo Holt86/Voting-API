@@ -13,7 +13,6 @@ import ru.aovechnikov.voting.web.servlet.controllers.RestaurantController;
  * @author - A.Ovechnikov
  * @date - 11.01.2018
  */
-
 public interface RestaurantService {
 
     /**
@@ -40,6 +39,14 @@ public interface RestaurantService {
      * @throws IllegalArgumentException in case the {@link Restaurant} is {@literal null}
      */
     Restaurant save(Restaurant restaurant);
+
+    /**
+     * Retrieve {@link Page} of all {@link Restaurant} from the data store with {@code pageable}.
+     *
+     * @param pageable pagination information
+     * @return specified {@link Page} of all {@link Restaurant}.
+     */
+    Page<Restaurant> findAll (Pageable pageable);
 
     /**
      * Retrieve {@link Page} of {@link Restaurant} from the data store by part name.

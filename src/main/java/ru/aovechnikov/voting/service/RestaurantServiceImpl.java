@@ -54,12 +54,19 @@ public class RestaurantServiceImpl implements RestaurantService{
         return repository.save(restaurant);
     }
 
+    @Override
+    public Page<Restaurant> findAll(Pageable pageable) {
+        Assert.notNull(pageable, "pageable must be not null");
+        return repository.findAll(pageable);
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public Page<Restaurant> findByName(String name, Pageable pageable) {
         Assert.notNull(name, "restaurant's name must be not null");
+        Assert.notNull(pageable, "pageable must be not null");
         return repository.findByName(name, pageable);
     }
 

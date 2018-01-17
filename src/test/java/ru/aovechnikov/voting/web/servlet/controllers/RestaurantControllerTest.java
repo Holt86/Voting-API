@@ -32,7 +32,7 @@ import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ADMIN;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ID_NOT_FOUND;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
 import static ru.aovechnikov.voting.util.exception.ErrorType.*;
-import static ru.aovechnikov.voting.web.servlet.controllers.RestaurantController.URL_REST;
+import static ru.aovechnikov.voting.web.servlet.controllers.RestaurantController.REST_URL;
 
 /**
  * For testing {@link RestaurantController}
@@ -42,7 +42,7 @@ import static ru.aovechnikov.voting.web.servlet.controllers.RestaurantController
  */
 public class RestaurantControllerTest extends AbstractControllerTest {
 
-    private static final String URL_TEST = URL_REST + '/';//
+    private static final String URL_TEST = REST_URL + '/';//
 
     @Autowired
     private RestaurantService restaurantService;
@@ -78,6 +78,24 @@ public class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$._embedded.restaurantResourceList[0]._links.self.href", endsWith("/restaurants/" + MAMA_ROMA_ID)));
 
         VerifyJsonPathUtil.verifyJsonForPageParam(actions, 20, 1, 1, 0);
+    }
+
+    @Test
+    public void testFindAll() throws Exception {
+        ResultActions actions = mockMvc.perform(get(URL_TEST + "?page=0&size=5&sort=id")
+                .with(httpBasic(USER1)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$._embedded.restaurantResourceList", hasSize(3)))
+                .andExpect(jsonPath("$._embedded.restaurantResourceList[0].name").value(MAMA_ROMA.getName()))
+                .andExpect(jsonPath("$._embedded.restaurantResourceList[0]._links.self.href", endsWith("/restaurants/" + MAMA_ROMA_ID)))
+                .andExpect(jsonPath("$._embedded.restaurantResourceList[1].name").value(GRILL_MASTER.getName()))
+                .andExpect(jsonPath("$._embedded.restaurantResourceList[1]._links.self.href", endsWith("/restaurants/" + GRILL_MASTER_ID)))
+                .andExpect(jsonPath("$._embedded.restaurantResourceList[2].name").value(CAROLS.getName()))
+                .andExpect(jsonPath("$._embedded.restaurantResourceList[2]._links.self.href", endsWith("/restaurants/" + CAROLS_ID)));
+
+        VerifyJsonPathUtil.verifyJsonForPageParam(actions, 5, 3, 1, 0);
     }
 
     @Test

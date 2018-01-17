@@ -14,7 +14,6 @@ import ru.aovechnikov.voting.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 
-import static ru.aovechnikov.voting.util.DateTimeUtil.getCurrentDateIfNull;
 import static ru.aovechnikov.voting.util.ValidationUtil.checkNotFound;
 
 /**
@@ -79,6 +78,7 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     public Page<Dish> findByMenu(int menuId, Pageable pageable) {
+        Assert.notNull(pageable, "pageable must be not null");
         return dishRepository.findByMenuId(menuId, pageable);
     }
 
@@ -88,6 +88,16 @@ public class DishServiceImpl implements DishService {
     @Override
     public Page<Dish> findByDate(LocalDate date, Pageable pageable) {
         Assert.notNull(date, "date must be not null");
+        Assert.notNull(pageable, "pageable must be not null");
         return dishRepository.findByDate(date, pageable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<Dish> findAll(Pageable pageable) {
+        Assert.notNull(pageable, "pageable must be not null");
+        return dishRepository.findAll(pageable);
     }
 }

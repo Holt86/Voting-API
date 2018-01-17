@@ -78,6 +78,7 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     public Page<Menu> findByRestaurantId(int restaurantId, Pageable pageable) {
+        Assert.notNull(pageable, "pageable must be not null");
         return menuRepository.findByRestaurantId(restaurantId, pageable);
     }
 
@@ -87,7 +88,14 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public Page<Menu> findByDate(LocalDate date, Pageable pageable) {
         Assert.notNull(date, "date must be not null");
+        Assert.notNull(pageable, "pageable must be not null");
         return menuRepository.findByDate(date, pageable);
+    }
+
+    @Override
+    public Page<Menu> findAll(Pageable pageable) {
+        Assert.notNull(pageable, "pageable must be not null");
+        return menuRepository.findAll(pageable);
     }
 
     /**

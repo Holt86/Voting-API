@@ -77,4 +77,12 @@ public interface DishService {
      * @return {@link Page} of all {@link Dish} which have the specified date.
      */
     Page<Dish> findByDate(LocalDate date, Pageable pageable);
+
+    /**
+     * Retrieve {@link Page} of all {@link Dish} from the data store by {@link LocalDate}.
+     *
+     * @param pageable pagination information
+     * @return {@link Page} of all {@link Dish}.
+     */
+    Page<Dish> findAll(Pageable pageable);
 }

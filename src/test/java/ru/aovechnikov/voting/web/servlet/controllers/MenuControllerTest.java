@@ -32,7 +32,7 @@ import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ADMIN;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ID_NOT_FOUND;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
 import static ru.aovechnikov.voting.util.exception.ErrorType.*;
-import static ru.aovechnikov.voting.web.servlet.controllers.MenuController.MENU_URL;
+import static ru.aovechnikov.voting.web.servlet.controllers.MenuController.REST_URL;
 
 /**
  * For testing {@link MenuController}.
@@ -42,7 +42,7 @@ import static ru.aovechnikov.voting.web.servlet.controllers.MenuController.MENU_
  */
 public class MenuControllerTest extends AbstractControllerTest {
 
-    private static final String URL_TEST = MENU_URL + '/';
+    private static final String URL_TEST = REST_URL + '/';
 
     @Autowired
     private MenuService menuService;
@@ -81,6 +81,27 @@ public class MenuControllerTest extends AbstractControllerTest {
                 .andDo(print());
         verifyJsonForMenu(actions, updated);
         MATCHER_FOR_MENU.assertEquals(updated, menuService.findById(updated.getId()));
+    }
+
+    @Test
+    public void testFindAll() throws Exception {
+        ResultActions actions = mockMvc.perform(get(URL_TEST +  "?page=0&size=5&sort=id")
+                .with(httpBasic(USER1)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$._embedded.menuResourceList", hasSize(4)))
+                .andExpect(jsonPath("$._embedded.menuResourceList[0].date").value(MENU_1.getDate().toString()))
+                .andExpect(jsonPath("$._embedded.menuResourceList[0]._links.self.href", endsWith("/menus/" + MENU_1_ID)))
+                .andExpect(jsonPath("$._embedded.menuResourceList[1].date").value(MENU_2.getDate().toString()))
+                .andExpect(jsonPath("$._embedded.menuResourceList[1]._links.self.href", endsWith("/menus/" + MENU_2_ID)))
+                .andExpect(jsonPath("$._embedded.menuResourceList[2].date").value(MENU_3.getDate().toString()))
+                .andExpect(jsonPath("$._embedded.menuResourceList[2]._links.self.href", endsWith("/menus/" + MENU_3_ID)))
+                .andExpect(jsonPath("$._embedded.menuResourceList[3].date").value(MENU_4.getDate().toString()))
+                .andExpect(jsonPath("$._embedded.menuResourceList[3]._links.self.href", endsWith("/menus/" + MENU_4_ID)));
+
+        verifyJsonForPageParam(actions, 5, 4, 1, 0);
     }
 
     @Test

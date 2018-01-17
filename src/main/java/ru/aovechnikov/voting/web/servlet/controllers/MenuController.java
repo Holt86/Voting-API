@@ -39,10 +39,10 @@ import static ru.aovechnikov.voting.util.ValidationUtil.checkNew;
  */
 
 @RestController
-@RequestMapping(MenuController.MENU_URL)
+@RequestMapping(MenuController.REST_URL)
 public class MenuController {
 
-    public static final String MENU_URL = "/rest/menus";
+    public static final String REST_URL = "/rest/menus";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -106,6 +106,23 @@ public class MenuController {
         checkIdConsistent(menu, id);
         MenuResource resource = menuAssembler.toResource(menuService.update(menu));
         return new ResponseEntity<>(resource, HttpStatus.OK);
+    }
+
+    /**
+     * Finds all menus.
+     *
+     * @param pageAssembler convert {@link Page} instances into {@link PagedResources}
+     * @param pageable pagination information
+     * @return {@link PagedResources} of {@link MenuResource} with status {@link HttpStatus#OK}.
+     */
+    @GetMapping(produces = MediaTypes.HAL_JSON_UTF8_VALUE)
+    public ResponseEntity<PagedResources<MenuResource>> findAll(PagedResourcesAssembler<Menu> pageAssembler, Pageable pageable) {
+        log.info("findAll all menus with paging {}", pageable);
+        Page<Menu> menusPage = menuService.findAll(pageable);
+        Link linkByDate = linkTo(methodOn(MenuController.class).findByDate(null, pageAssembler, pageable)).withRel("by-date");
+        PagedResources<MenuResource> pagedResources = pageAssembler.toResource(menusPage, menuAssembler);
+        pagedResources.add(linkByDate);
+        return new ResponseEntity<>(pagedResources, HttpStatus.OK);
     }
 
     /**

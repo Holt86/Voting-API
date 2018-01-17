@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author - A.Ovechnikov
  * @date - 15.01.2018
  */
-
 public class VerifyJsonPathUtil {
 
     public static void verifyJsonForRestaurant(ResultActions actions, Restaurant restaurant) throws Exception {
@@ -33,7 +32,7 @@ public class VerifyJsonPathUtil {
                 .andExpect(jsonPath("$._links.dishes.href", endsWith("/dishes/by-menu?id=" + menu.getId())))
                 .andExpect(jsonPath("$._links.create-dish.href", endsWith("/menus/" + menu.getId() + "/dishes")));
         if (menu.getDate().equals(DateTimeUtil.getCurrentDate()))
-                actions.andExpect(jsonPath("$._links.voting-menu.href", endsWith("/voting/" + menu.getId())));
+                actions.andExpect(jsonPath("$._links.vote-menu.href", endsWith("/voting/" + menu.getId())));
     }
 
     public static void verifyJsonForDish(ResultActions actions, Dish dish) throws Exception {
@@ -69,6 +68,15 @@ public class VerifyJsonPathUtil {
                 .andExpect(jsonPath("$._links.profile.href", endsWith("/profile")));
     }
 
+    /**
+     * Verify Json page params in {@code action}.
+     *
+     * @param size the number of items of that page
+     * @param elements total elements
+     * @param pages the number elements of pages
+     * @param number the page number
+     * @throws Exception
+     */
     public static void verifyJsonForPageParam(ResultActions actions, int size, int elements, int pages, int number) throws Exception {
         actions.andExpect(jsonPath("$.page.size").value(size))
                 .andExpect(jsonPath("$.page.totalElements").value(elements))

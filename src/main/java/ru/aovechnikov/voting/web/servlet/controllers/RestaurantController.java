@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,8 @@ import ru.aovechnikov.voting.web.servlet.halresource.RestaurantResourceAssembler
 
 import javax.validation.Valid;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static ru.aovechnikov.voting.util.ValidationUtil.checkIdConsistent;
 import static ru.aovechnikov.voting.util.ValidationUtil.checkNew;
 
@@ -34,10 +37,10 @@ import static ru.aovechnikov.voting.util.ValidationUtil.checkNew;
  * @date - 14.01.2018
  */
 @RestController
-@RequestMapping( RestaurantController.URL_REST)
+@RequestMapping( RestaurantController.REST_URL)
 public class RestaurantController{
 
-    public static final String URL_REST = "/rest/restaurants";
+    public static final String REST_URL = "/rest/restaurants";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -67,6 +70,23 @@ public class RestaurantController{
         log.info("findByName restaurant with name={}", name);
         Page<Restaurant> pageRestaurants = restaurantService.findByName(name, pageable);
         return new ResponseEntity<>(pageAssembler.toResource(pageRestaurants, restaurantResourceAssembler), HttpStatus.OK);
+    }
+
+    /**
+     * Finds all restaurants.
+     *
+     * @param pageAssembler convert {@link Page} instances into {@link PagedResources}
+     * @param pageable pagination information
+     * @return {@link PagedResources} of {@link RestaurantResource} with status {@link HttpStatus#OK}.
+     */
+    @GetMapping(produces = MediaTypes.HAL_JSON_UTF8_VALUE)
+    public ResponseEntity<PagedResources<RestaurantResource>> findAll(PagedResourcesAssembler<Restaurant> pageAssembler, Pageable pageable){
+        log.info("findAll restaurants");
+        Page<Restaurant> pageRestaurants = restaurantService.findAll(pageable);
+        Link linkByName = linkTo(methodOn(RestaurantController.class).findByName(pageAssembler, pageable, null)).withRel("by-name");
+        PagedResources<RestaurantResource> resources = pageAssembler.toResource(pageRestaurants, restaurantResourceAssembler);
+        resources.add(linkByName);
+        return new ResponseEntity<>(resources, HttpStatus.OK);
     }
 
     /**

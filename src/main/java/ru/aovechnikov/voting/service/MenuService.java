@@ -80,6 +80,14 @@ public interface MenuService {
     Page<Menu> findByDate(LocalDate date, Pageable pageable);
 
     /**
+     * Retrieve {@link Page} of all {@link Menu} from the data store.
+     *
+     * @param pageable pagination information
+     * @return {@link Page} of all {@link Menu}.
+     */
+    Page<Menu> findAll(Pageable pageable);
+
+    /**
      * Retrieve {@link Menu} from the data store by dishId of {@link Dish}
      *
      * @param dishId Value to search for

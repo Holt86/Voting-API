@@ -18,7 +18,6 @@ import static ru.aovechnikov.voting.testutil.testdata.RestaurantTestData.*;
  * @author - A.Ovechnikov
  * @date - 12.01.2018
  */
-
 public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Autowired
@@ -59,6 +58,11 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
         service.save(created);
         MATCHER_FOR_RESTAURANT.assertEquals(created, service.findById(created.getId()));
         MATCHER_FOR_RESTAURANT.assertCollectionsEquals(Arrays.asList(MAMA_ROMA, GRILL_MASTER, CAROLS, created), service.findByName("", PAGEABLE).getContent());
+    }
+
+    @Test
+    public void testFindAll1() throws Exception {
+        MATCHER_FOR_RESTAURANT.assertCollectionsEquals(Arrays.asList(MAMA_ROMA, GRILL_MASTER, CAROLS), service.findAll(PAGEABLE).getContent());
     }
 
     @Test

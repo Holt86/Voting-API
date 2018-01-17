@@ -38,7 +38,7 @@ public class MenuResourceAssembler extends IdentifiableResourceAssemblerSupport<
         resource.add(linkTo(methodOn(DishController.class).findByMenu(entity.getId(), null, null)).withRel("dishes"));
         resource.add(linkTo(methodOn(MenuController.class).createDishForMenu(null, entity.getId())).withRel("create-dish"));
         if (entity.getDate().equals(DateTimeUtil.getCurrentDate()))
-        resource.add(linkTo(VoteController.class).slash(entity.getId()).withRel("voting-menu"));
+        resource.add(linkTo(VoteController.class).slash(entity.getId()).withRel("vote-menu"));
         return resource;
     }
 

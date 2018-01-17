@@ -22,7 +22,6 @@ import static ru.aovechnikov.voting.testutil.testdata.RestaurantTestData.MAMA_RO
  * @author - A.Ovechnikov
  * @date - 12.01.2018
  */
-
 public class MenuServiceImplTest extends AbstractServiceTest {
 
     @Autowired
@@ -78,6 +77,11 @@ public class MenuServiceImplTest extends AbstractServiceTest {
     @Test
     public void testFindByDate() throws Exception {
         MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(MENU_1, MENU_2), service.findByDate(DATE_1, PAGEABLE).getContent());
+    }
+
+    @Test
+    public void testFindAll() throws Exception {
+        MATCHER_FOR_MENU.assertCollectionsEquals(Arrays.asList(MENU_1, MENU_2, MENU_3, MENU_4), service.findAll( PAGEABLE).getContent());
     }
 
     @Test

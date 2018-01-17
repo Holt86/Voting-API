@@ -27,7 +27,7 @@ import static ru.aovechnikov.voting.testutil.testdata.UserTestData.ID_NOT_FOUND;
 import static ru.aovechnikov.voting.testutil.testdata.UserTestData.USER1;
 import static ru.aovechnikov.voting.util.exception.ErrorType.*;
 import static ru.aovechnikov.voting.util.exception.ErrorType.NOT_AUTHENTICATION;
-import static ru.aovechnikov.voting.web.servlet.controllers.DishController.URL_DISH;
+import static ru.aovechnikov.voting.web.servlet.controllers.DishController.REST_URL;
 
 /**
  * For testing {@link DishController}
@@ -37,7 +37,7 @@ import static ru.aovechnikov.voting.web.servlet.controllers.DishController.URL_D
  */
 public class DishControllerTest extends AbstractControllerTest{
 
-    private static final String URL_TEST = URL_DISH + '/';
+    private static final String URL_TEST = REST_URL + '/';
 
     @Autowired
     private DishService dishService;
@@ -126,6 +126,34 @@ public class DishControllerTest extends AbstractControllerTest{
                 .andExpect(jsonPath("$._embedded.dishResourceList[2]._links.self.href", endsWith("/dishes/" + DISH_3_ID_MENU_1)));
 
         verifyJsonForPageParam(actions, 3, 3, 1, 0);
+    }
+
+    @Test
+    public void testFindAll() throws Exception {
+        ResultActions actions = mockMvc.perform(get(URL_TEST + "?page=0&size=5&sort=id")
+                .with(httpBasic(USER1)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$._embedded.dishResourceList", hasSize(5)))
+                .andExpect(jsonPath("$._embedded.dishResourceList[0].name").value(DISH_1_MENU_1.getName()))
+                .andExpect(jsonPath("$._embedded.dishResourceList[0].price").value(DISH_1_MENU_1.getPrice()))
+                .andExpect(jsonPath("$._embedded.dishResourceList[0]._links.self.href", endsWith("/dishes/" + DISH_1_ID_MENU_1)))
+                .andExpect(jsonPath("$._embedded.dishResourceList[1].name").value(DISH_2_MENU_1.getName()))
+                .andExpect(jsonPath("$._embedded.dishResourceList[1].price").value(DISH_2_MENU_1.getPrice()))
+                .andExpect(jsonPath("$._embedded.dishResourceList[1]._links.self.href", endsWith("/dishes/" + DISH_2_ID_MENU_1)))
+                .andExpect(jsonPath("$._embedded.dishResourceList[2].name").value(DISH_3_MENU_1.getName()))
+                .andExpect(jsonPath("$._embedded.dishResourceList[2].price").value(DISH_3_MENU_1.getPrice()))
+                .andExpect(jsonPath("$._embedded.dishResourceList[2]._links.self.href", endsWith("/dishes/" + DISH_3_ID_MENU_1)))
+                .andExpect(jsonPath("$._embedded.dishResourceList[3].name").value(DISH_1_MENU_3.getName()))
+                .andExpect(jsonPath("$._embedded.dishResourceList[3].price").value(DISH_1_MENU_3.getPrice()))
+                .andExpect(jsonPath("$._embedded.dishResourceList[3]._links.self.href", endsWith("/dishes/" + DISH_1_ID_MENU_3)))
+                .andExpect(jsonPath("$._embedded.dishResourceList[4].name").value(DISH_2_MENU_3.getName()))
+                .andExpect(jsonPath("$._embedded.dishResourceList[4].price").value(DISH_2_MENU_3.getPrice()))
+                .andExpect(jsonPath("$._embedded.dishResourceList[4]._links.self.href", endsWith("/dishes/" + DISH_2_ID_MENU_3)));
+
+        verifyJsonForPageParam(actions, 5, 9, 2, 0);
     }
 
     @Test

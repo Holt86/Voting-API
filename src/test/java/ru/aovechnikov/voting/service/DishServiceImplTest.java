@@ -80,6 +80,13 @@ public class DishServiceImplTest extends AbstractServiceTest {
               service.findByMenu(MENU_1_ID, PAGEABLE).getContent());
     }
 
+    @Test
+    public void testFindAll() throws Exception {
+        MATCHER_FOR_DISH.assertCollectionsEquals(Arrays.asList(DISH_1_MENU_1, DISH_2_MENU_1, DISH_3_MENU_1, DISH_1_MENU_3,
+                        DISH_2_MENU_3, DISH_1_MENU_2, DISH_2_MENU_2, DISH_1_MENU_4, DISH_2_MENU_4),
+                service.findAll(PAGEABLE).getContent());
+    }
+
     @Test(expected = AccessDeniedException.class)
     public void testDeleteAccessDenied() throws Exception {
         configureAuthentication("ROLE_USER");
@@ -98,6 +105,5 @@ public class DishServiceImplTest extends AbstractServiceTest {
         Dish created = getCreatedDish();
         Dish returned = service.create(created, MENU_1_ID);
         created.setId(returned.getId());
-
     }
 }

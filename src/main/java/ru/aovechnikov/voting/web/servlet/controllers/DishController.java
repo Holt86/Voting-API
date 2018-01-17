@@ -38,10 +38,10 @@ import static ru.aovechnikov.voting.util.ValidationUtil.checkIdConsistent;
  * @date - 14.01.2018
  */
 @RestController
-@RequestMapping(DishController.URL_DISH)
+@RequestMapping(DishController.REST_URL)
 public class DishController {
 
-    public static final String URL_DISH = "/rest/dishes";
+    public static final String REST_URL = "/rest/dishes";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -134,6 +134,23 @@ public class DishController {
         Page<Dish> pageDish = dishService.findByMenu(menuId, pageable);
         Link link = linkTo(methodOn(DishController.class).findByMenu(menuId, pageAssembler, pageable)).withSelfRel();
         return new ResponseEntity<>(pageAssembler.toResource(pageDish, dishAssembler, link), HttpStatus.OK);
+    }
+
+    /**
+     * Finds all dishes.
+     *
+     * @param pageAssembler convert {@link Page} instances into {@link PagedResources}
+     * @param pageable pagination information
+     * @return {@link PagedResources} of {@link DishResource} with status {@link HttpStatus#OK}.
+     */
+    @GetMapping(produces = MediaTypes.HAL_JSON_UTF8_VALUE)
+    public ResponseEntity<PagedResources<DishResource>> findAll(PagedResourcesAssembler<Dish> pageAssembler, Pageable pageable){
+        log.info("findAll all dishes with paging {}", pageable);
+        Page<Dish> pageDish = dishService.findAll(pageable);
+        Link linkByDate = linkTo(methodOn(DishController.class).findByDate(null, pageAssembler, pageable)).withRel("by-date");
+        PagedResources<DishResource> dishResources = pageAssembler.toResource(pageDish, dishAssembler);
+        dishResources.add(linkByDate);
+        return new ResponseEntity<>(dishResources, HttpStatus.OK);
     }
 
     /**

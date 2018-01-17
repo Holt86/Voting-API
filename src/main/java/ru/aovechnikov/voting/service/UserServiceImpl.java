@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Page<User> findAll(Pageable pageable) {
+        Assert.notNull(pageable, "pageable must be not null");
         return repository.findAll(pageable);
     }
 
