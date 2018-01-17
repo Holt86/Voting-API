@@ -14,7 +14,7 @@ Voting system for deciding where to have lunch.
 Each restaurant provides new menu each day.
 
 ----------
-###Applied technologies stack:
+**Applied technologies stack:**
 
 1. **Apache Maven** is used to build, execute tests, and package `voting-api` into a `.war` file.
 1. **Tomcat 8** 
